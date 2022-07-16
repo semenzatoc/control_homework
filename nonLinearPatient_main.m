@@ -65,7 +65,7 @@ discreteMat.M = discreteModel.B*0;
 discreteMat.C = discreteModel.C;
 discreteMat.D = discreteModel.D;
 
-q=10*eye(2); 
+q=20000*eye(2); 
 r= 0.01*eye(2);
 PH=200;
 F= -[1 0; 0 1];
@@ -78,21 +78,20 @@ BuildCondendsedMPCmatrices(discreteMat,r,q,F,f,PH);
 Q_KF = diag((0.1*x_eq + min(x_eq)).^2);
 R_KF = 0.001*eye(2);
 
-sim('NonLinearPatient.slx');
 
 %% Cycle through patients
-all_bis = zeros(60001,24);
-all_rass = zeros(60001,24);
+all_bis = zeros(6001,2);
+all_rass = zeros(301,2);
 
-for i=1:24
+for i=1:2
     subj = i; 
     [patient] = patient_parameters(subj);
     [propofol, remifentanil, RASS] = drugs_parameters(patient);
 
     sim('NonLinearPatient.slx');
 
-    all_bis(:,i) = ans.BIS_output.signals.values;
-    all_rass(:,i) = ans.RASS_output.signals.values;
+    all_bis(:,i) = BIS_output.signals.values;
+    all_rass(:,i) = RASS_output.signals.values;
 end
 
 mean_bis = mean(all_bis,2);
@@ -103,7 +102,7 @@ ax=[];
 figure('color', 'w'); 
 sgtitle('State estimated with Kalman filter')
 ax(1)=subplot(211);hold on; box on
-plot(ans.BIS_output.time,mean_bis, '.-', 'linewidth', 2); 
+plot(BIS_output.time,mean_bis, '.-', 'linewidth', 2); 
 yline(info.desired_BIS)
 yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
 xline(60, 'b--')
@@ -111,7 +110,7 @@ xlabel('Time [s]');  title('BIS - Mean')
 xlim([0 info.Tsim]); ylim([10 100]); set(gca, 'fontsize', 16); 
 
 ax(2)=subplot(212); hold on; box on
-plot(ans.RASS_output.time,mean_rass, '.-', 'linewidth', 2); 
+plot(RASS_output.time,mean_rass, '.-', 'linewidth', 2); 
 yline(info.desired_RASS)
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
