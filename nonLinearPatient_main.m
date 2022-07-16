@@ -91,8 +91,8 @@ for i=1:24
 
     sim('NonLinearPatient.slx');
 
-    all_bis(:,i) = BIS_output.signal.values;
-    all_rass(:,i) = RASS_output.signal.values;
+    all_bis(:,i) = ans.BIS_output.signals.values;
+    all_rass(:,i) = ans.RASS_output.signals.values;
 end
 
 mean_bis = mean(all_bis,2);
@@ -103,7 +103,7 @@ ax=[];
 figure('color', 'w'); 
 sgtitle('State estimated with Kalman filter')
 ax(1)=subplot(211);hold on; box on
-plot(BIS_kalman.time,mean_bis, '.-', 'linewidth', 2); 
+plot(ans.BIS_output.time,mean_bis, '.-', 'linewidth', 2); 
 yline(info.desired_BIS)
 yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
 xline(60, 'b--')
@@ -111,7 +111,7 @@ xlabel('Time [s]');  title('BIS - Mean')
 xlim([0 info.Tsim]); ylim([10 100]); set(gca, 'fontsize', 16); 
 
 ax(2)=subplot(212); hold on; box on
-plot(RASS_kalman.time,mean_rass, '.-', 'linewidth', 2); 
+plot(ans.RASS_output.time,mean_rass, '.-', 'linewidth', 2); 
 yline(info.desired_RASS)
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
