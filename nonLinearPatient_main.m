@@ -23,8 +23,7 @@ op.rass_eq=rass_eq;
 info.Tsim = 6000; % [s] simulation time
 info.Ts=20;% [s] assumed to be equal for all signals (BIS, RASS and NMB)
 
-wantNoisyBIS = 1;               % 0= I do NOT want noise on BIS, 1= I want noise on BIS
-wantNoisyNBM = 1;               % 0= I do NOT want noise on NBM, 1= I want noise on NBM
+wantNoisyBIS = 0;               % 0= I do NOT want noise on BIS, 1= I want noise on BIS
 
 info.T_induction=0;
 %BIS
@@ -65,58 +64,103 @@ discreteMat.M = discreteModel.B*0;
 discreteMat.C = discreteModel.C;
 discreteMat.D = discreteModel.D;
 
-q=10*eye(2); 
+q=1000*eye(2); 
 r= 0.01*eye(2);
 PH=200;
 F= -[1 0; 0 1];
 f= u_eq;
 
-contDiscMat=...
+discMat=...
 BuildCondendsedMPCmatrices(discreteMat,r,q,F,f,PH);
 
 %% KALMAN FILTER
 Q_KF = diag((0.1*x_eq + min(x_eq)).^2);
 R_KF = 0.001*eye(2);
 
-sim('NonLinearPatient.slx');
+sim('NonLinearPatient_test.slx');
 
-%% Cycle through patients
-all_bis = zeros(60001,24);
-all_rass = zeros(60001,24);
-
-for i=1:24
-    subj = i; 
-    [patient] = patient_parameters(subj);
-    [propofol, remifentanil, RASS] = drugs_parameters(patient);
-
-    sim('NonLinearPatient.slx');
-
-    all_bis(:,i) = BIS_output.signal.values;
-    all_rass(:,i) = RASS_output.signal.values;
-end
-
-mean_bis = mean(all_bis,2);
-mean_rass = mean(all_rass,2);
-
-%FIGURE: mean comparison
+%FIGURE: Non linear average patient
 ax=[];
 figure('color', 'w'); 
-sgtitle('State estimated with Kalman filter')
+sgtitle('Non linear model with MPC and Kalman filter')
 ax(1)=subplot(211);hold on; box on
-plot(BIS_kalman.time,mean_bis, '.-', 'linewidth', 2); 
+plot(BIS_nl.time,BIS_nl.signals.values, '.-', 'linewidth', 2); 
 yline(info.desired_BIS)
 yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
 xline(60, 'b--')
-xlabel('Time [s]');  title('BIS - Mean')
+xlabel('Time [s]');  title('BIS')
 xlim([0 info.Tsim]); ylim([10 100]); set(gca, 'fontsize', 16); 
 
 ax(2)=subplot(212); hold on; box on
-plot(RASS_kalman.time,mean_rass, '.-', 'linewidth', 2); 
+plot(RASS_nl.time,RASS_nl.signals.values, '.-', 'linewidth', 2); 
 yline(info.desired_RASS)
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
-xlabel('Time [s]'); title('RASS - Mean')
+xlabel('Time [s]'); title('RASS')
 xlim([0 info.Tsim]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
 
-
 linkaxes(ax, 'x')
+
+
+%FIGURE: mean comparison
+% ax=[];
+% figure('color', 'w'); 
+% sgtitle('State estimated with Kalman filter')
+% ax(1)=subplot(211);hold on; box on
+% plot(BIS_kalman.time,mean_bis, '.-', 'linewidth', 2); 
+% yline(info.desired_BIS)
+% yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
+% xline(60, 'b--')
+% xlabel('Time [s]');  title('BIS - Mean')
+% xlim([0 info.Tsim]); ylim([10 100]); set(gca, 'fontsize', 16); 
+% 
+% ax(2)=subplot(212); hold on; box on
+% plot(RASS_kalman.time,mean_rass, '.-', 'linewidth', 2); 
+% yline(info.desired_RASS)
+% yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
+% xline(60, 'b--')
+% xlabel('Time [s]'); title('RASS - Mean')
+% xlim([0 info.Tsim]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
+% 
+% linkaxes(ax, 'x')
+% %% Cycle through patients
+% all_bis = zeros(60001,24);
+% all_rass = zeros(60001,24);
+% 
+% for i=1:24
+%     subj = i; 
+%     [patient] = patient_parameters(subj);
+%     [propofol, remifentanil, RASS] = drugs_parameters(patient);
+% 
+%     sim('NonLinearPatient_test.slx');
+% 
+%     all_bis(:,i) = BIS_output.signal.values;
+%     all_rass(:,i) = RASS_output.signal.values;
+% end
+% 
+% mean_bis = mean(all_bis,2);
+% mean_rass = mean(all_rass,2);
+% 
+% %FIGURE: mean comparison
+% ax=[];
+% figure('color', 'w'); 
+% sgtitle('State estimated with Kalman filter')
+% ax(1)=subplot(211);hold on; box on
+% plot(BIS_kalman.time,mean_bis, '.-', 'linewidth', 2); 
+% yline(info.desired_BIS)
+% yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
+% xline(60, 'b--')
+% xlabel('Time [s]');  title('BIS - Mean')
+% xlim([0 info.Tsim]); ylim([10 100]); set(gca, 'fontsize', 16); 
+% 
+% ax(2)=subplot(212); hold on; box on
+% plot(RASS_kalman.time,mean_rass, '.-', 'linewidth', 2); 
+% yline(info.desired_RASS)
+% yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
+% xline(60, 'b--')
+% xlabel('Time [s]'); title('RASS - Mean')
+% xlim([0 info.Tsim]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
+% 
+% linkaxes(ax, 'x')
+
+
