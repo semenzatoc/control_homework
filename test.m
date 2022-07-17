@@ -80,7 +80,7 @@ Q_KF = diag((0.1*x_eq + min(x_eq)).^2);
 R_KF = 0.001*eye(2);
 
 % %Setting the new parameter for the MPC
-q_Kalman=1000*eye(2); 
+q_Kalman=1*eye(2); 
 r_Kalman= 0.01*eye(2);
 
 kalmDiscMat=...
@@ -98,7 +98,7 @@ plot(BIS_accessible.time,BIS_accessible.signals.values,'.-','linewidth',2);
 yline(info.upperLimit_BIS, 'r-'); yline(info.lowerLimit_BIS, 'r-')
 xline(60, 'b--')
 xlabel('Time [s]');  title('BIS - MPC Controller')
-xlim([0 info.Tsim/1000]); ylim([10 100]); set(gca, 'fontsize', 16); 
+xlim([0 info.Tsim/6]); ylim([10 100]); set(gca, 'fontsize', 16); 
 
 ax(2)=subplot(212); hold on; box on
 plot(RASS_accessible.time,RASS_accessible.signals.values,'.-','linewidth',2);
@@ -106,7 +106,7 @@ plot(RASS_accessible.time,RASS_accessible.signals.values,'.-','linewidth',2);
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
 xlabel('Time [s]'); title('RASS - MPC Controller')
-xlim([0 info.Tsim/1000]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
+xlim([0 info.Tsim/6]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
 
 linkaxes(ax, 'x')
 % Figure: State comparison (Kalman vs Accessible)
@@ -118,7 +118,7 @@ for i = 1:10
 plot(KalmanState_dx.time,KalmanState_dx.signals.values(:,i), 'r'); 
 plot(accesibleState_dx.time,accesibleState_dx.signals.values(:,i), '--b');
 xlabel('Time [s]');  title(['Comparison between States ',num2str(i)])
-xlim([0 info.Tsim/1000]); ylim([-50 10]); 
+xlim([0 info.Tsim/6]); ylim([-50 10]); 
 end
 legend('Kalman estimate state', 'Accessible state')
      
@@ -140,6 +140,6 @@ yline(info.desired_RASS)
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
 xlabel('Time [s]'); title('RASS - MPC Controller')
-xlim([0 info.Tsim/1000]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
+xlim([0 info.Tsim/6]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
 
 linkaxes(ax, 'x')

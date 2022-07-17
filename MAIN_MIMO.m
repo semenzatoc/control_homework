@@ -92,7 +92,7 @@ Q_KF = diag((0.1*x_eq + min(x_eq)).^2);
 R_KF = 0.001*eye(2);
 
 % %Setting the new parameter for the MPC
-q_Kalman=20000*eye(2); 
+q_Kalman=10*eye(2); 
 % q_Kalman = [50 0; 0 10];
 r_Kalman= 0.001*eye(2);
 % PH=200;
