@@ -23,7 +23,7 @@ op.rass_eq=rass_eq;
 info.Tsim = 6000; % [s] simulation time
 info.Ts=20;% [s] assumed to be equal for all signals (BIS, RASS and NMB)
 
-wantNoisyBIS = 0;               % 0= I do NOT want noise on BIS, 1= I want noise on BIS
+wantNoisyBIS = 1;               % 0= I do NOT want noise on BIS, 1= I want noise on BIS
 
 info.T_induction=0;
 %BIS
@@ -64,7 +64,7 @@ discreteMat.M = discreteModel.B*0;
 discreteMat.C = discreteModel.C;
 discreteMat.D = discreteModel.D;
 
-q=1000*eye(2); 
+q=1*eye(2); 
 r= 0.01*eye(2);
 PH=200;
 F= -[1 0; 0 1];
