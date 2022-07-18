@@ -74,10 +74,10 @@ discreteMat.M = discreteModel.B*0;
 discreteMat.C = discreteModel.C;
 discreteMat.D = discreteModel.D;
 
-q=1*eye(2); 
+q=10*eye(2); 
 % r=[1/25 0;0 1/6.25];
 % q= 0.1*eye(2);
-r= 1*eye(2);
+r= 0.01*eye(2);
 PH=100;
 F= -[1 0; 0 1];
 % F = zeros(2);
@@ -146,7 +146,7 @@ for i = 1:10
 plot(KalmanState_dx.time,KalmanState_dx.signals.values(:,i), 'r'); 
 plot(accesibleState_dx.time,accesibleState_dx.signals.values(:,i), '--b');
 xlabel('Time [s]');  title(['Comparison between States ',num2str(i)])
-xlim([0 info.Tsim/6]); ylim([-2 2]); 
+xlim([0 info.Tsim/6]); ylim([-2 0.5]); 
 end
 legend('Kalman estimate state', 'Accessible state')
      
@@ -167,7 +167,7 @@ plot(RASS_kalman.time,RASS_kalman.signals.values, '.-', 'linewidth', 2);
 yline(info.desired_RASS)
 yline(info.upperLimit_RASS, 'r-'); yline(info.lowerLimit_RASS, 'r-')
 xline(60, 'b--')
-xlabel('Time [s]'); title('RASS - MPC Controller')
+xlabel('Time [s]'); title('RASS')
 xlim([0 info.Tsim/6]); ylim([-6 0]);  set(gca, 'fontsize', 16); 
 
 
