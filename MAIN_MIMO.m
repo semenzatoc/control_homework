@@ -45,7 +45,7 @@ info.lowerLimit_BIS= 40;
 %RASS
 info.initial_RASS=0;
 info.desired_RASS = -4;
-info.upperLimit_RASS= -4;
+info.upperLimit_RASS= -3;
 info.lowerLimit_RASS= -5;
 
 %% Patient database
